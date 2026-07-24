@@ -23,3 +23,10 @@ def create(db: Session, book: BookCreate) -> BookModel:
     db.refresh(book_model)
 
     return book_model
+
+def find_by_id(db: Session, book_id: int) -> BookModel | None:
+    statement =  select(BookModel).where(BookModel.id == book_id)
+
+    result = db.execute(statement)
+
+    return result.scalar_one_or_none()
