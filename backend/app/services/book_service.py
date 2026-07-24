@@ -1,6 +1,7 @@
 from app.schemas.book import BookBase, BookCreate, BookResponse
 from app.repositories import book_repository
 from sqlalchemy.orm import Session
+from fastapi import HTTPException
 
 
 
@@ -9,27 +10,23 @@ def get_books(db: Session) -> list[BookResponse]:
     
     all_books = book_repository.find_all(db)
 
-    books_response = []
 
-    for book in all_books:
-        books_response.append(
-            BookResponse(
-                id=book.id,
-                title=book.title,
-                author=book.author,
-                pages=book.pages,
-                rating=book.rating
-            )
-        )
-    return books_response
+    return [
+        BookResponse.model_validate(book)
+        for book in all_books
+    ]
 
 def create_book(db: Session, book: BookCreate) -> BookResponse:
     books_model = book_repository.create(db, book)
 
-    return BookResponse(
-        id = books_model.id,
-        title = books_model.title,
-        author = books_model.author,
-        pages = books_model.pages,
-        rating = books_model.rating
-    )
+    return BookResponse.model_validate(books_model)
+
+def get_book(db: Session, book_id: int) -> BookResponse:
+    book_found = book_repository.find_by_id(db, book_id)
+    if (book_found is None):
+        raise HTTPException(
+            status_code=404,
+            detail="Book not found"
+        )
+    else:
+        return BookResponse.model_validate(book_found)
