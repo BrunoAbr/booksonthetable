@@ -5,12 +5,12 @@ services:
     restart: unless-stopped
 
     environment:
-      POSTGRES_USER: booksonthetable
-      POSTGRES_PASSWORD: booksonthetable
-      POSTGRES_DB: booksonthetable
+      - POSTGRES_USER=${DATABASE_USER}
+      - POSTGRES_PASSWORD=${DATABASE_PASSWORD}
+      - POSTGRES_DB=${DATABASE_NAME}
 
     ports:
-      - "5432:5432"
+      - "${DATABASE_PORT}:5432"
 
     volumes:
      - postgres_data:/var/lib/postgresql/data
