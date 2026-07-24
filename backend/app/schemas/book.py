@@ -1,7 +1,6 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 
 class BookBase(BaseModel):
-    id: int
     title: str
     author: str
     pages: int
@@ -12,3 +11,5 @@ class BookCreate(BookBase):
 
 class BookResponse(BookBase):
     id: int
+
+    model_config = ConfigDict(from_attributes=True)
