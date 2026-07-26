@@ -30,3 +30,9 @@ def find_by_id(db: Session, book_id: int) -> BookModel | None:
     result = db.execute(statement)
 
     return result.scalar_one_or_none()
+
+
+def delete(db: Session, book: BookModel) -> None:
+    db.delete(book)
+    db.commit()
+

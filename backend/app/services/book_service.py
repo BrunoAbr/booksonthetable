@@ -6,6 +6,7 @@ from fastapi import HTTPException
 
 
 
+
 def get_books(db: Session) -> list[BookResponse]:
     
     all_books = book_repository.find_all(db)
@@ -30,3 +31,13 @@ def get_book(db: Session, book_id: int) -> BookResponse:
         )
     else:
         return BookResponse.model_validate(book_found)
+
+def delete_book(db: Session, book_id: int) -> None:
+    book_found = book_repository.find_by_id(db, book_id)
+
+    if (book_found is None):
+        book_repository.delete(db, book_found)
+        raise HTTPException(
+            status_code=404,
+            detail="Book not found"
+        )

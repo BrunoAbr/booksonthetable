@@ -21,3 +21,6 @@ def book_by_id(book_id: int, db: Session = Depends(get_db)):
 def add_book(book: BookCreate, db: Session = Depends(get_db)):
     return book_service.create_book(db, book)
 
+@router.delete("/books/{book_id}", status_code=204)
+def delete_book_by_id(book_id: int, db: Session = Depends(get_db)):
+    book_service.delete_book(db, book_id)
