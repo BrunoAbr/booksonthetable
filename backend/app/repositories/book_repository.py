@@ -1,5 +1,5 @@
 from app.models.book import BookModel
-from app.schemas.book import BookCreate
+from app.schemas.book import BookCreate, BookUpdate
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
@@ -36,3 +36,12 @@ def delete(db: Session, book: BookModel) -> None:
     db.delete(book)
     db.commit()
 
+def update(db: Session, book: BookModel, book_data: BookUpdate) -> BookModel:
+    update_data = book_data.model_dump(exclude_unset=True)
+
+    for field, value in update_data.items():
+        setattr(book, field, value)
+        db.commit()
+        db.refresh(book)
+
+        return book
