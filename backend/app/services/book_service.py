@@ -1,4 +1,4 @@
-from app.schemas.book import BookBase, BookCreate, BookResponse
+from app.schemas.book import BookBase, BookCreate, BookResponse, BookUpdate
 from app.repositories import book_repository
 from sqlalchemy.orm import Session
 from fastapi import HTTPException
@@ -36,8 +36,22 @@ def delete_book(db: Session, book_id: int) -> None:
     book_found = book_repository.find_by_id(db, book_id)
 
     if (book_found is None):
-        book_repository.delete(db, book_found)
         raise HTTPException(
             status_code=404,
             detail="Book not found"
         )
+    book_repository.delete(db, book_found)
+
+
+def update_book(db: Session, book_id: int, book_data: BookUpdate) -> BookResponse:
+    book_found = book_repository.find_by_id(db, book_id)
+
+    if (book_found is None):
+        raise HTTPException(
+            status_code=404,
+            detail="Book not found"
+        )
+    book_updated = book_repository.update(db, book_found, book_data)
+    
+
+    return BookResponse.model_validate(book_updated)
