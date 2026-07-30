@@ -6,7 +6,7 @@ Aplicação Full Stack desenvolvida em Python para gerenciar livros lidos, regis
 
 - Python
 - FastAPI
-- NiceGUI
+- Django
 - PostgreSQL
 - SQLAlchemy
 - Docker
